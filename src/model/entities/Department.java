@@ -1,12 +1,21 @@
 package model.entities;
 
-public class Department {
+import java.io.Serializable;
 
+public class Department implements Serializable{
+
+		/**
+	 * Serializable transformar meu objeto em bytes ou arquivos, manipulando
+	 */
+	private static final long serialVersionUID = 1L;
 		private Integer id;
 		private String name;
 		
-		public Department(Integer id, String name) {
+		public Department() {
 			super();
+		}
+		public Department(Integer id, String name) {
+			
 			this.id = id;
 			this.name = name;
 		}
