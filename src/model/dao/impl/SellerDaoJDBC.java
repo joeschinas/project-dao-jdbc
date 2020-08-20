@@ -20,7 +20,11 @@ public class SellerDaoJDBC implements SellerDao {
 	}
 	@Override
 	public void insert(Seller obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement(sql)
+		}
 		
 	}
 
@@ -50,16 +54,8 @@ public class SellerDaoJDBC implements SellerDao {
 		st.setInt(1, id);
 		rs=st.executeQuery();
 			if(rs.next()) {
-			Department dep = new Department();
-			dep.setId(rs.getInt("DepartmentId"));
-			dep.setName(rs.getString("depName"));
-			Seller seller = new Seller();
-			seller.setId(rs.getInt("Id"));
-			seller.setName(rs.getString("Name"));
-			seller.setEmail(rs.getString("Email"));
-			seller.setBirthDate(rs.getDate("BirthDate"));
-			seller.setBaseSalary(rs.getDouble("baseSalary"));
-			seller.setDepartment(dep);
+			Department dep = instanciaDepartment(rs);
+			Seller seller = instanciaSeller(rs,dep);
 			return seller;
 			
 			}
@@ -79,6 +75,22 @@ public class SellerDaoJDBC implements SellerDao {
 		
 	}
 
+	private Seller instanciaSeller(ResultSet rs, Department dep) throws SQLException {
+		Seller seller = new Seller();
+		seller.setId(rs.getInt("Id"));
+		seller.setName(rs.getString("Name"));
+		seller.setEmail(rs.getString("Email"));
+		seller.setBirthDate(rs.getDate("BirthDate"));
+		seller.setBaseSalary(rs.getDouble("baseSalary"));
+		seller.setDepartment(dep);
+		return seller;
+	}
+	private Department instanciaDepartment(ResultSet rs) throws SQLException {
+		Department dep = new Department();
+		dep.setId(rs.getInt("DepartmentId"));
+		dep.setName(rs.getString("depName"));
+		return dep;
+	}
 	@Override
 	public List<Seller> findAll() {
 		// TODO Auto-generated method stub
