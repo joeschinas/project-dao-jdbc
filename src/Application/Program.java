@@ -1,7 +1,10 @@
 package Application;
 
+import java.util.List;
+
 import model.dao.DaoFactory;
 import model.dao.SellerDao;
+import model.entities.Department;
 import model.entities.Seller;
 
 public class Program {
@@ -12,7 +15,21 @@ public class Program {
 		
 		Seller seller = seerDao.findById(2);
 		
-		System.out.println(seller);
+		System.out.println("TESTE"+seller);
+		
+		System.out.println("\n TESTE 2");
+		
+		Department dep = new Department(1, null);
+		
+		 List<Seller> list = seerDao.findByDepartment(dep);
+		 
+		 for (Seller obj : list) {
+			 System.out.println(obj);
+			 
+		 }
+		
+		
+		
 		
 	}
 }

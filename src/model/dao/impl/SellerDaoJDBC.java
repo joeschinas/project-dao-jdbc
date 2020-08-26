@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import db.Db;
 import db.DbException;
@@ -22,9 +25,9 @@ public class SellerDaoJDBC implements SellerDao {
 	public void insert(Seller obj) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		try {
-			st = conn.prepareStatement(sql)
-		}
+		/*try {
+			st = conn.prepareStatement()
+		}*/
 		
 	}
 
@@ -95,6 +98,51 @@ public class SellerDaoJDBC implements SellerDao {
 	public List<Seller> findAll() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	@Override
+	public List<Seller> findByDepartment(Department department) {
+		PreparedStatement st = null;
+		ResultSet rs =null;
+		
+		try {
+				st = conn.prepareStatement(
+				"\r\n" + 
+				"select seller.*, Department.Name as depName\r\n" + 
+				"from seller inner join department\r\n" + 
+				"on seller.departmentId = department.Id\r\n" + 
+				"where departmentId= ?\r\n" + 
+				"order by name"
+				);
+				
+		st.setInt(1, department.getId());
+		rs=st.executeQuery();
+		List<Seller> objList = new ArrayList<>();
+		Map<Integer, Department> map = new HashMap<>();
+		
+			while(rs.next()) {
+			Department dep = map.get(rs.getInt("DepartmentId"));
+			if(dep == null) {
+			dep = instanciaDepartment(rs);
+			map.put(rs.getInt("DepartmentId"),dep);
+			}
+			
+			Seller seller = instanciaSeller(rs,dep);
+			 objList.add(seller );
+			return objList;
+			}
+			return null;
+				
+		
+		}catch(SQLException erro) {
+			
+			throw new DbException ("Erro"+erro.getMessage());
+			
+		}finally {
+			Db.closeStatement(st);
+			Db.closeResultSet(rs);
+			
+			
+		}
 	}
 
 }
